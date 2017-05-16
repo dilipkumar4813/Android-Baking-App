@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/UdacityBaking.iml" filepath="$PROJECT_DIR$/UdacityBaking.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Android-Baking.iml" filepath="$PROJECT_DIR$/Android-Baking.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
