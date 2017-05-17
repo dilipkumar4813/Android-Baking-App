@@ -12,7 +12,7 @@ import net.simonvt.schematic.annotation.PrimaryKey;
  * @version 1.0
  */
 
-public class StepsColumns {
+public interface StepsColumns {
 
     @DataType(DataType.Type.INTEGER)
     @AutoIncrement
