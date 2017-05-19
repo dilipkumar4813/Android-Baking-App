@@ -2,4 +2,9 @@
     <string name="app_name">Udacity Baking</string>
     <string name="title_recipeitem_list">RecipeItems</string>
     <string name="title_recipeitem_detail">RecipeItem Detail</string>
+
+    <string name="mime_type" translatable="false">text</string>
+    <string name="share_title">Share recipes</string>
+    <string name="share_content">Recipes your best way to relax yourself</string>
+    <string name="share">Share</string>
 </resources>

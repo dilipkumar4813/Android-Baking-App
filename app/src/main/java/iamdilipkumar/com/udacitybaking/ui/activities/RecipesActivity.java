@@ -3,12 +3,15 @@ package iamdilipkumar.com.udacitybaking.ui.activities;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.GridView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import iamdilipkumar.com.udacitybaking.R;
 import iamdilipkumar.com.udacitybaking.models.Recipe;
+import iamdilipkumar.com.udacitybaking.utils.ShareUtils;
 import iamdilipkumar.com.udacitybaking.utils.networking.BakingApiInterface;
 import iamdilipkumar.com.udacitybaking.utils.networking.NetworkUtils;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -39,6 +42,23 @@ public class RecipesActivity extends AppCompatActivity {
                 .subscribe(this::apiResponse, this::apiError));
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.ic_share:
+                new ShareUtils().shareApp(this);
+                break;
+        }
+
+        return true;
+    }
+
     /**
      * Method to read json response and parse the same
      * by passing the objects to the adapter
@@ -55,6 +75,6 @@ public class RecipesActivity extends AppCompatActivity {
      * @param error -Throwable to access the localized message
      */
     private void apiError(Throwable error) {
-        Log.d(TAG, error.getLocalizedMessage().toString());
+        Log.d(TAG, error.getMessage().toString());
     }
 }
