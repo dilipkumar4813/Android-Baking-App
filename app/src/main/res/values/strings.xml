@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Udacity Baking</string>
+    <string name="title_recipeitem_list">RecipeItems</string>
+    <string name="title_recipeitem_detail">RecipeItem Detail</string>
 </resources>

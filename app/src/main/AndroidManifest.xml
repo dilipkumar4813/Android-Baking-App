@@ -9,12 +9,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".RecipesActivity">
+        <activity android:name=".ui.activities.RecipesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.activities.RecipeItemListActivity"
+            android:label="@string/title_recipeitem_list"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".ui.activities.RecipeItemDetailActivity"
+            android:label="@string/title_recipeitem_detail"
+            android:parentActivityName=".ui.activities.RecipeItemListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="iamdilipkumar.com.udacitybaking.ui.activities.RecipeItemListActivity" />
         </activity>
     </application>
 

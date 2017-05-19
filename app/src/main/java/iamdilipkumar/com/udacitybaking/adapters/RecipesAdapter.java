@@ -4,6 +4,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import java.util.ArrayList;
+
+import iamdilipkumar.com.udacitybaking.models.Recipe;
+
 /**
  * Created on 18/05/17.
  *
@@ -13,9 +17,11 @@ import android.widget.BaseAdapter;
 
 public class RecipesAdapter extends BaseAdapter {
 
+    ArrayList<Recipe> recipes = new ArrayList<>();
+
     @Override
     public int getCount() {
-        return 0;
+        return recipes.size();
     }
 
     @Override
