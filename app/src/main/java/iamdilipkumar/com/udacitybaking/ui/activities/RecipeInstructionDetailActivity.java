@@ -11,20 +11,20 @@ import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
 import iamdilipkumar.com.udacitybaking.R;
-import iamdilipkumar.com.udacitybaking.ui.fragments.RecipeItemDetailFragment;
+import iamdilipkumar.com.udacitybaking.ui.fragments.RecipeInstructionDetailFragment;
 
 /**
  * An activity representing a single RecipeItem detail screen. This
  * activity is only used narrow width devices. On tablet-size devices,
  * item details are presented side-by-side with a list of items
- * in a {@link RecipeItemListActivity}.
+ * in a {@link RecipeInstructionsListActivity}.
  */
-public class RecipeItemDetailActivity extends AppCompatActivity {
+public class RecipeInstructionDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recipeitem_detail);
+        setContentView(R.layout.activity_recipe_instruction_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
@@ -56,9 +56,9 @@ public class RecipeItemDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(RecipeItemDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(RecipeItemDetailFragment.ARG_ITEM_ID));
-            RecipeItemDetailFragment fragment = new RecipeItemDetailFragment();
+            arguments.putString(RecipeInstructionDetailFragment.ARG_ITEM_ID,
+                    getIntent().getStringExtra(RecipeInstructionDetailFragment.ARG_ITEM_ID));
+            RecipeInstructionDetailFragment fragment = new RecipeInstructionDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.recipeitem_detail_container, fragment)
@@ -76,7 +76,7 @@ public class RecipeItemDetailActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            navigateUpTo(new Intent(this, RecipeItemListActivity.class));
+            navigateUpTo(new Intent(this, RecipeInstructionsListActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);

@@ -11,16 +11,16 @@ import android.widget.TextView;
 
 import iamdilipkumar.com.udacitybaking.R;
 import iamdilipkumar.com.udacitybaking.dummy.DummyContent;
-import iamdilipkumar.com.udacitybaking.ui.activities.RecipeItemDetailActivity;
-import iamdilipkumar.com.udacitybaking.ui.activities.RecipeItemListActivity;
+import iamdilipkumar.com.udacitybaking.ui.activities.RecipeInstructionDetailActivity;
+import iamdilipkumar.com.udacitybaking.ui.activities.RecipeInstructionsListActivity;
 
 /**
  * A fragment representing a single RecipeItem detail screen.
- * This fragment is either contained in a {@link RecipeItemListActivity}
- * in two-pane mode (on tablets) or a {@link RecipeItemDetailActivity}
+ * This fragment is either contained in a {@link RecipeInstructionsListActivity}
+ * in two-pane mode (on tablets) or a {@link RecipeInstructionDetailActivity}
  * on handsets.
  */
-public class RecipeItemDetailFragment extends Fragment {
+public class RecipeInstructionDetailFragment extends Fragment {
     /**
      * The fragment argument representing the item ID that this fragment
      * represents.
@@ -36,7 +36,7 @@ public class RecipeItemDetailFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public RecipeItemDetailFragment() {
+    public RecipeInstructionDetailFragment() {
     }
 
     @Override
@@ -60,7 +60,7 @@ public class RecipeItemDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.recipeitem_detail, container, false);
+        View rootView = inflater.inflate(R.layout.recipe_instruction_detail, container, false);
 
         // Show the dummy content as text in a TextView.
         if (mItem != null) {

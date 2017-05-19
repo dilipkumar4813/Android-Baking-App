@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import iamdilipkumar.com.udacitybaking.R;
 import iamdilipkumar.com.udacitybaking.dummy.DummyContent;
-import iamdilipkumar.com.udacitybaking.ui.fragments.RecipeItemDetailFragment;
+import iamdilipkumar.com.udacitybaking.ui.fragments.RecipeInstructionDetailFragment;
 
 import java.util.List;
 
@@ -25,11 +25,11 @@ import java.util.List;
  * An activity representing a list of RecipeItems. This activity
  * has different presentations for handset and tablet-size devices. On
  * handsets, the activity presents a list of items, which when touched,
- * lead to a {@link RecipeItemDetailActivity} representing
+ * lead to a {@link RecipeInstructionDetailActivity} representing
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class RecipeItemListActivity extends AppCompatActivity {
+public class RecipeInstructionsListActivity extends AppCompatActivity {
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -40,7 +40,7 @@ public class RecipeItemListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recipeitem_list);
+        setContentView(R.layout.activity_recipe_instructions_list);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -99,16 +99,16 @@ public class RecipeItemListActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     if (mTwoPane) {
                         Bundle arguments = new Bundle();
-                        arguments.putString(RecipeItemDetailFragment.ARG_ITEM_ID, holder.mItem.id);
-                        RecipeItemDetailFragment fragment = new RecipeItemDetailFragment();
+                        arguments.putString(RecipeInstructionDetailFragment.ARG_ITEM_ID, holder.mItem.id);
+                        RecipeInstructionDetailFragment fragment = new RecipeInstructionDetailFragment();
                         fragment.setArguments(arguments);
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.recipeitem_detail_container, fragment)
                                 .commit();
                     } else {
                         Context context = v.getContext();
-                        Intent intent = new Intent(context, RecipeItemDetailActivity.class);
-                        intent.putExtra(RecipeItemDetailFragment.ARG_ITEM_ID, holder.mItem.id);
+                        Intent intent = new Intent(context, RecipeInstructionDetailActivity.class);
+                        intent.putExtra(RecipeInstructionDetailFragment.ARG_ITEM_ID, holder.mItem.id);
 
                         context.startActivity(intent);
                     }

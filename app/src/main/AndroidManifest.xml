@@ -17,17 +17,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activities.RecipeItemListActivity"
+            android:name=".ui.activities.RecipeInstructionsListActivity"
             android:label="@string/title_recipeitem_list"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name=".ui.activities.RecipeItemDetailActivity"
+            android:name=".ui.activities.RecipeInstructionDetailActivity"
             android:label="@string/title_recipeitem_detail"
-            android:parentActivityName=".ui.activities.RecipeItemListActivity"
+            android:parentActivityName=".ui.activities.RecipeInstructionsListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="iamdilipkumar.com.udacitybaking.ui.activities.RecipeItemListActivity" />
+                android:value="iamdilipkumar.com.udacitybaking.ui.activities.RecipeInstructionsListActivity" />
         </activity>
     </application>
 
