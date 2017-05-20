@@ -17,7 +17,7 @@ import net.simonvt.schematic.annotation.TableEndpoint;
 @ContentProvider(authority = BakingProvider.AUTHORITY, database = BakingDatabase.class)
 public class BakingProvider {
 
-    public static final String AUTHORITY = "iamdilipkumar.com.udacitybaking.data.provider";
+    static final String AUTHORITY = "iamdilipkumar.com.udacitybaking.data.provider";
 
     @TableEndpoint(table = BakingDatabase.BAKING_TABLE)
     public static class BakingTable {
@@ -69,7 +69,7 @@ public class BakingProvider {
                 = Uri.parse("content://" + AUTHORITY + "/steps_table");
 
         @InexactContentUri(
-                path = "ingredients_table/#",
+                path = "steps_table/#",
                 name = "LIST_ID",
                 type = "vnd.android.cursor.item/steps_table",
                 whereColumn = BakingColumns._ID,

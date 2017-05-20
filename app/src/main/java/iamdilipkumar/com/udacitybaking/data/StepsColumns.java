@@ -25,7 +25,7 @@ public interface StepsColumns {
 
     @DataType(DataType.Type.INTEGER)
     @NotNull
-    String STEPS = "steps";
+    String STEPS = "step";
 
     @DataType(DataType.Type.TEXT)
     @NotNull

@@ -3,6 +3,7 @@
     android:id="@+id/rl_recipe"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="16dp"
     android:background="@color/colorAccent"
     android:orientation="vertical">
 
@@ -12,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:padding="16dp"
+        android:padding="32dp"
         android:text="@string/app_name"
         android:textColor="@android:color/white" />
 

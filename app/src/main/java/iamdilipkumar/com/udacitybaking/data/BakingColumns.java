@@ -20,6 +20,10 @@ public interface BakingColumns {
     @PrimaryKey
     String _ID = "id";
 
+    @DataType(DataType.Type.INTEGER)
+    @NotNull
+    String RECIPE_ID = "recipe_id";
+
     @DataType(DataType.Type.TEXT)
     @NotNull
     String NAME = "name";

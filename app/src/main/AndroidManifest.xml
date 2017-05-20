@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="iamdilipkumar.com.udacitybaking">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -29,6 +31,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="iamdilipkumar.com.udacitybaking.ui.activities.RecipeInstructionsListActivity" />
         </activity>
+
+        <provider
+            android:name=".data.generated.BakingProvider"
+            android:authorities="iamdilipkumar.com.udacitybaking.data.provider"
+            android:exported="false" />
     </application>
 
 </manifest>
