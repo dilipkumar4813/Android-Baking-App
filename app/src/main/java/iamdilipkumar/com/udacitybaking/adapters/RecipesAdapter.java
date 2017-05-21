@@ -1,13 +1,19 @@
 package iamdilipkumar.com.udacitybaking.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,8 +31,15 @@ public class RecipesAdapter extends BaseAdapter {
 
     private ArrayList<Recipe> mRecipes = new ArrayList<>();
     private Context mContext;
+
     @BindView(R.id.tv_recipe_title)
     TextView tvRecipeTitle;
+
+    @BindView(R.id.rl_recipe)
+    RelativeLayout recipeContainer;
+
+    @BindView(R.id.iv_recipe_image)
+    ImageView recipeImage;
 
     public RecipesAdapter(Context context, ArrayList<Recipe> recipes) {
         this.mContext = context;
@@ -60,6 +73,23 @@ public class RecipesAdapter extends BaseAdapter {
         Recipe item = (Recipe) getItem(position);
 
         tvRecipeTitle.setText(item.getName());
+
+        Random rand = new Random();
+        int r = rand.nextInt(255);
+        int g = rand.nextInt(255);
+        int b = rand.nextInt(255);
+        recipeContainer.setBackgroundColor(Color.rgb(r, g, b));
+
+        //String url = item.getImage();
+
+        /*if (url != null) {
+            if (!url.isEmpty()) {
+                Glide.with(mContext).load(url).centerCrop().into(recipeImage);
+            }
+        }*/
+
+        String url = "http://img.huffingtonpost.com/asset/crop_0_127_1254_619,scalefit_720_noupscale/575050041200002e00895299.jpeg";
+        Glide.with(mContext).load(url).centerCrop().into(recipeImage);
 
         return convertView;
     }

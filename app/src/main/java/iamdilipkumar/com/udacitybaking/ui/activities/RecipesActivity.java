@@ -10,7 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -34,9 +35,17 @@ public class RecipesActivity extends AppCompatActivity implements AdapterView.On
     @BindView(R.id.gv_recipes)
     GridView gridRecipes;
 
-    private static final String TAG = RecipesActivity.class.getSimpleName();
+    @BindView(R.id.tv_error_message)
+    TextView errorText;
+
+    @BindView(R.id.pb_loading_data)
+    ProgressBar loadingProgress;
+
     CompositeDisposable mCompositeDisposable;
-    ArrayList<Recipe> recipeItems = new ArrayList<>();
+    private ArrayList<Recipe> mRecipeItems = new ArrayList<>();
+    public static final String RECIPE_ID = "recipe_id";
+    public static final String RECIPE_NAME = "recipe_name";
+    //private static final String TAG = RecipesActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +55,14 @@ public class RecipesActivity extends AppCompatActivity implements AdapterView.On
         mCompositeDisposable = new CompositeDisposable();
         ButterKnife.bind(this);
 
-        BakingApiInterface bakingInterface = NetworkUtils.buildRetrofit().create(BakingApiInterface.class);
+        if (savedInstanceState == null) {
+            BakingApiInterface bakingInterface = NetworkUtils.buildRetrofit().create(BakingApiInterface.class);
 
-        mCompositeDisposable.add(bakingInterface.getRecipes()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(this::apiResponse, this::apiError));
+            mCompositeDisposable.add(bakingInterface.getRecipes()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(this::apiResponse, this::apiError));
+        }
     }
 
     @Override
@@ -78,9 +89,15 @@ public class RecipesActivity extends AppCompatActivity implements AdapterView.On
      * @param recipes - Main GSON Object class
      */
     private void apiResponse(ArrayList<Recipe> recipes) {
+        loadingProgress.setVisibility(View.GONE);
+        errorText.setVisibility(View.GONE);
+
+        getContentResolver().delete(BakingProvider.BakingTable.CONTENT_URI, null, null);
+        getContentResolver().delete(BakingProvider.IngredientsTable.CONTENT_URI, null, null);
+        getContentResolver().delete(BakingProvider.StepsTable.CONTENT_URI, null, null);
 
         for (Recipe recipe : recipes) {
-            recipeItems.add(recipe);
+            mRecipeItems.add(recipe);
 
             ContentValues cvRecipe = new ContentValues();
             cvRecipe.put("recipe_id", recipe.getId());
@@ -89,20 +106,18 @@ public class RecipesActivity extends AppCompatActivity implements AdapterView.On
             cvRecipe.put("image", recipe.getImage());
             getContentResolver().insert(BakingProvider.BakingTable.CONTENT_URI, cvRecipe);
 
-            Log.d("recipe details", "" + recipe.getName());
-
             for (Ingredient ingredient : recipe.getIngredients()) {
-                Log.d("recipe ingredients", "" + ingredient.getIngredient());
 
                 ContentValues cvIngredient = new ContentValues();
                 cvIngredient.put("recipe_id", recipe.getId());
                 cvIngredient.put("ingredient", ingredient.getIngredient());
                 cvIngredient.put("quantity", ingredient.getQuantity());
                 cvIngredient.put("measure", ingredient.getMeasure());
+
+                getContentResolver().insert(BakingProvider.IngredientsTable.CONTENT_URI, cvIngredient);
             }
 
             for (Step step : recipe.getSteps()) {
-                Log.d("recipe steps", step.getShortDescription());
 
                 ContentValues cvSteps = new ContentValues();
                 cvSteps.put("recipe_id", recipe.getId());
@@ -111,14 +126,14 @@ public class RecipesActivity extends AppCompatActivity implements AdapterView.On
                 cvSteps.put("long_description", step.getDescription());
                 cvSteps.put("video_url", step.getVideoURL());
                 cvSteps.put("thumnail_url", step.getThumbnailURL());
+
+                getContentResolver().insert(BakingProvider.StepsTable.CONTENT_URI, cvSteps);
             }
         }
 
-        RecipesAdapter adapter = new RecipesAdapter(this, recipeItems);
+        RecipesAdapter adapter = new RecipesAdapter(this, mRecipeItems);
         gridRecipes.setAdapter(adapter);
         gridRecipes.setOnItemClickListener(this);
-
-        Log.d(TAG, "" + recipes.size());
     }
 
     /**
@@ -127,13 +142,15 @@ public class RecipesActivity extends AppCompatActivity implements AdapterView.On
      * @param error -Throwable to access the localized message
      */
     private void apiError(Throwable error) {
-        Log.d(TAG, error.getMessage().toString());
+        loadingProgress.setVisibility(View.GONE);
+        errorText.setText(error.getLocalizedMessage());
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(this, recipeItems.get(position).getName(), Toast.LENGTH_SHORT).show();
         Intent recipesInstructionsIntent = new Intent(this, RecipeInstructionsListActivity.class);
+        recipesInstructionsIntent.putExtra(RECIPE_ID, mRecipeItems.get(position).getId());
+        recipesInstructionsIntent.putExtra(RECIPE_NAME, mRecipeItems.get(position).getName());
         startActivity(recipesInstructionsIntent);
     }
 }
