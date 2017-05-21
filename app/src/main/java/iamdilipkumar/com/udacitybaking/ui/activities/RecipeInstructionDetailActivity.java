@@ -2,10 +2,7 @@ package iamdilipkumar.com.udacitybaking.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
@@ -28,16 +25,6 @@ public class RecipeInstructionDetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-        // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -50,14 +37,30 @@ public class RecipeInstructionDetailActivity extends AppCompatActivity {
         // to its container so we don't need to manually add it.
         // For more information, see the Fragments API guide at:
         //
-        // http://developer.android.com/guide/components/fragments.html
-        //
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(RecipeInstructionDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(RecipeInstructionDetailFragment.ARG_ITEM_ID));
+
+            Bundle extras = getIntent().getExtras();
+
+            if (extras != null) {
+                if (extras.containsKey(RecipesActivity.RECIPE_ID)) {
+                    arguments.putInt(RecipesActivity.RECIPE_ID,
+                            extras.getInt(RecipesActivity.RECIPE_ID));
+                }
+
+                if (extras.containsKey(RecipeInstructionsListActivity.INSTRUCTION_STEP)) {
+                    arguments.putInt(RecipeInstructionsListActivity.INSTRUCTION_STEP,
+                            extras.getInt(RecipeInstructionsListActivity.INSTRUCTION_STEP));
+                }
+
+                if (extras.containsKey(RecipesActivity.RECIPE_NAME)) {
+                    arguments.putString(RecipesActivity.RECIPE_NAME,
+                            extras.getString(RecipesActivity.RECIPE_NAME));
+                }
+            }
+
             RecipeInstructionDetailFragment fragment = new RecipeInstructionDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
@@ -70,12 +73,6 @@ public class RecipeInstructionDetailActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            // This ID represents the Home or Up button. In the case of this
-            // activity, the Up button is shown. For
-            // more details, see the Navigation pattern on Android Design:
-            //
-            // http://developer.android.com/design/patterns/navigation.html#up-vs-back
-            //
             navigateUpTo(new Intent(this, RecipeInstructionsListActivity.class));
             return true;
         }

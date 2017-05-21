@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,10 +41,13 @@ public class RecipesActivity extends AppCompatActivity implements AdapterView.On
     ProgressBar loadingProgress;
 
     CompositeDisposable mCompositeDisposable;
+    RecipesAdapter mAdapter;
     private ArrayList<Recipe> mRecipeItems = new ArrayList<>();
+
     public static final String RECIPE_ID = "recipe_id";
     public static final String RECIPE_NAME = "recipe_name";
-    //private static final String TAG = RecipesActivity.class.getSimpleName();
+    public static final String RECIPES = "recipes";
+    public static final String RECIPE_POSITION = "recipe_position";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,17 @@ public class RecipesActivity extends AppCompatActivity implements AdapterView.On
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe(this::apiResponse, this::apiError));
+        } else {
+
+            loadingProgress.setVisibility(View.GONE);
+
+            mRecipeItems = savedInstanceState.getParcelableArrayList(RECIPES);
+            mAdapter = new RecipesAdapter(this, mRecipeItems);
+            gridRecipes.setAdapter(mAdapter);
+            gridRecipes.setOnItemClickListener(this);
+
+            int index = savedInstanceState.getInt(RECIPE_POSITION);
+            gridRecipes.smoothScrollToPosition(index);
         }
     }
 
@@ -82,6 +95,14 @@ public class RecipesActivity extends AppCompatActivity implements AdapterView.On
         return true;
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        int index = gridRecipes.getFirstVisiblePosition();
+        outState.putInt(RECIPE_POSITION, index);
+        outState.putParcelableArrayList(RECIPES, mRecipeItems);
+        super.onSaveInstanceState(outState);
+    }
+
     /**
      * Method to read json response and parse the same
      * by passing the objects to the adapter
@@ -90,7 +111,6 @@ public class RecipesActivity extends AppCompatActivity implements AdapterView.On
      */
     private void apiResponse(ArrayList<Recipe> recipes) {
         loadingProgress.setVisibility(View.GONE);
-        errorText.setVisibility(View.GONE);
 
         getContentResolver().delete(BakingProvider.BakingTable.CONTENT_URI, null, null);
         getContentResolver().delete(BakingProvider.IngredientsTable.CONTENT_URI, null, null);
@@ -131,8 +151,8 @@ public class RecipesActivity extends AppCompatActivity implements AdapterView.On
             }
         }
 
-        RecipesAdapter adapter = new RecipesAdapter(this, mRecipeItems);
-        gridRecipes.setAdapter(adapter);
+        mAdapter = new RecipesAdapter(this, mRecipeItems);
+        gridRecipes.setAdapter(mAdapter);
         gridRecipes.setOnItemClickListener(this);
     }
 
@@ -143,6 +163,7 @@ public class RecipesActivity extends AppCompatActivity implements AdapterView.On
      */
     private void apiError(Throwable error) {
         loadingProgress.setVisibility(View.GONE);
+        errorText.setVisibility(View.VISIBLE);
         errorText.setText(error.getLocalizedMessage());
     }
 
@@ -152,5 +173,11 @@ public class RecipesActivity extends AppCompatActivity implements AdapterView.On
         recipesInstructionsIntent.putExtra(RECIPE_ID, mRecipeItems.get(position).getId());
         recipesInstructionsIntent.putExtra(RECIPE_NAME, mRecipeItems.get(position).getName());
         startActivity(recipesInstructionsIntent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mCompositeDisposable.clear();
     }
 }

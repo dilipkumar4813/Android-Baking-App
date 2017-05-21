@@ -3,10 +3,11 @@ package iamdilipkumar.com.udacitybaking.ui.activities;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.MenuItem;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,8 +35,11 @@ public class RecipeInstructionsListActivity extends AppCompatActivity implements
     private ArrayList<Step> mSteps = new ArrayList<>();
     private int mRecipeId;
     RecipesInstructionsAdapter mAdapter;
+    private String mRecipeName;
 
     public static final String INSTRUCTION_STEP = "instruction_step";
+    public static final String INSTRUCTIONS = "instructions";
+    public static final String INSTRUCTIONS_SCROLL = "instructions_scroll_position";
 
     @BindView(R.id.recipeitem_list)
     RecyclerView instructionsItems;
@@ -49,62 +53,68 @@ public class RecipeInstructionsListActivity extends AppCompatActivity implements
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            if (extras.containsKey(RecipesActivity.RECIPE_NAME)) {
-                toolbar.setTitle(extras.getString(RecipesActivity.RECIPE_NAME));
-                Log.d("Recipe", extras.getString(RecipesActivity.RECIPE_NAME));
-            }
-
-            if (extras.containsKey(RecipesActivity.RECIPE_ID)) {
-                mRecipeId = extras.getInt(RecipesActivity.RECIPE_ID);
-                Cursor cursor = getContentResolver().query(BakingProvider.StepsTable.CONTENT_URI,
-                        null, StepsColumns.RECIPE_ID + "=" + mRecipeId, null, null);
-
-                if (cursor != null) {
-                    if (cursor.moveToFirst()) {
-                        do {
-                            //int stepId = cursor.getInt(cursor.getColumnIndex(StepsColumns._ID));
-                            //int recipeId = cursor.getInt(cursor.getColumnIndex(StepsColumns.RECIPE_ID));
-                            /*String longDescription = cursor.getString(cursor.getColumnIndex(StepsColumns.LONG_DESCRIPTION));
-                            String step = cursor.getString(cursor.getColumnIndex(StepsColumns.STEPS));
-                            String thumbnailUrl = cursor.getString(cursor.getColumnIndex(StepsColumns.THUMBNAIL_URL));
-                            String videoUrl = cursor.getString(cursor.getColumnIndex(StepsColumns.VIDEO_URL));*/
-                            String shortDescription = cursor.getString(cursor.getColumnIndex(StepsColumns.SHORT_DESCRIPTION));
-                            String step = cursor.getString(cursor.getColumnIndex(StepsColumns.STEPS));
-
-                            Step instruction = new Step();
-                            instruction.setShortDescription(shortDescription);
-                            instruction.setId(Integer.parseInt(step));
-                            /*instruction.setDescription(longDescription);
-                            instruction.setThumbnailURL(thumbnailUrl);
-                            instruction.setVideoURL(videoUrl);*/
-
-                            mSteps.add(instruction);
-
-                        } while (cursor.moveToNext());
-                    }
-                }
-
-                if (cursor != null) {
-                    cursor.close();
-                }
-            }
-        } else {
-            toolbar.setTitle(getTitle());
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        Step instruction = new Step();
-        instruction.setShortDescription("Ingredients");
-        instruction.setId(-1);
-        mSteps.add(instruction);
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if (extras != null) {
+                if (extras.containsKey(RecipesActivity.RECIPE_NAME)) {
+                    mRecipeName = extras.getString(RecipesActivity.RECIPE_NAME);
+                    toolbar.setTitle(mRecipeName);
+                }
 
-        Collections.reverse(mSteps);
+                if (extras.containsKey(RecipesActivity.RECIPE_ID)) {
+                    mRecipeId = extras.getInt(RecipesActivity.RECIPE_ID);
+                    Cursor cursor = getContentResolver().query(BakingProvider.StepsTable.CONTENT_URI,
+                            null, StepsColumns.RECIPE_ID + "=" + mRecipeId, null, null);
+
+                    if (cursor != null) {
+                        if (cursor.moveToFirst()) {
+                            do {
+                                String shortDescription = cursor.getString(cursor.getColumnIndex(StepsColumns.SHORT_DESCRIPTION));
+                                String step = cursor.getString(cursor.getColumnIndex(StepsColumns.STEPS));
+
+                                Step instruction = new Step();
+                                instruction.setShortDescription(shortDescription);
+                                instruction.setId(Integer.parseInt(step));
+
+                                mSteps.add(instruction);
+
+                            } while (cursor.moveToNext());
+                        }
+                    }
+
+                    if (cursor != null) {
+                        cursor.close();
+                    }
+                }
+            } else {
+                toolbar.setTitle(getTitle());
+            }
+
+            Step instruction = new Step();
+            instruction.setShortDescription("Ingredients");
+            instruction.setId(-1);
+            mSteps.add(instruction);
+
+            Collections.reverse(mSteps);
+        } else {
+            mRecipeName = savedInstanceState.getString(RecipesActivity.RECIPE_NAME);
+            mRecipeId = savedInstanceState.getInt(RecipesActivity.RECIPE_ID);
+            mSteps = savedInstanceState.getParcelableArrayList(INSTRUCTIONS);
+        }
+
 
         assert instructionsItems != null;
         mAdapter = new RecipesInstructionsAdapter(mSteps, this);
         instructionsItems.setAdapter(mAdapter);
+
+        /*if(savedInstanceState!=null){
+            instructionsItems.smoothScrollToPosition();
+        }*/
 
         if (findViewById(R.id.recipeitem_detail_container) != null) {
             // The detail container view will be present only in the
@@ -116,13 +126,32 @@ public class RecipeInstructionsListActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void instructionClick(int position) {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            navigateUpTo(new Intent(this, RecipeInstructionsListActivity.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-        Step item = mSteps.get(position);
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList(INSTRUCTIONS, mSteps);
+        outState.putString(RecipesActivity.RECIPE_NAME, mRecipeName);
+        outState.putInt(RecipesActivity.RECIPE_ID, mRecipeId);
+        //outState.putInt(INSTRUCTIONS_SCROLL,instructionsItems.getFi)
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void instructionClick(int position) {
 
         if (mTwoPane) {
             Bundle arguments = new Bundle();
-            arguments.putString(RecipeInstructionDetailFragment.ARG_ITEM_ID, String.valueOf(item.getId()));
+            arguments.putInt(RecipesActivity.RECIPE_ID, mRecipeId);
+            arguments.putInt(INSTRUCTION_STEP, position);
+            arguments.putString(RecipesActivity.RECIPE_NAME, mRecipeName);
             RecipeInstructionDetailFragment fragment = new RecipeInstructionDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
@@ -132,7 +161,7 @@ public class RecipeInstructionsListActivity extends AppCompatActivity implements
             Intent intent = new Intent(this, RecipeInstructionDetailActivity.class);
             intent.putExtra(RecipesActivity.RECIPE_ID, mRecipeId);
             intent.putExtra(INSTRUCTION_STEP, position);
-            intent.putExtra(RecipeInstructionDetailFragment.ARG_ITEM_ID, String.valueOf(item.getId()));
+            intent.putExtra(RecipesActivity.RECIPE_NAME, mRecipeName);
             startActivity(intent);
         }
     }
