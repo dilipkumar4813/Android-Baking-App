@@ -27,12 +27,12 @@ import com.google.android.exoplayer2.util.Util;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import iamdilipkumar.com.udacitybaking.R;
+import iamdilipkumar.com.udacitybaking.data.ApplicationPreferences;
 import iamdilipkumar.com.udacitybaking.data.BakingProvider;
 import iamdilipkumar.com.udacitybaking.data.IngredientsColumns;
 import iamdilipkumar.com.udacitybaking.data.StepsColumns;
 import iamdilipkumar.com.udacitybaking.ui.activities.RecipeInstructionDetailActivity;
 import iamdilipkumar.com.udacitybaking.ui.activities.RecipeInstructionsListActivity;
-import iamdilipkumar.com.udacitybaking.ui.activities.RecipesActivity;
 
 /**
  * A fragment representing a single RecipeItem detail screen.
@@ -60,82 +60,79 @@ public class RecipeInstructionDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(RecipesActivity.RECIPE_ID)) {
-            int recipeId = getArguments().getInt(RecipesActivity.RECIPE_ID);
+        int recipeId = ApplicationPreferences.getRecipeId(getContext());
 
-            if (getArguments().containsKey(RecipeInstructionsListActivity.INSTRUCTION_STEP)) {
-                int instructionStep =
-                        getArguments().getInt(RecipeInstructionsListActivity.INSTRUCTION_STEP) - 1;
+        if (getArguments().containsKey(RecipeInstructionsListActivity.INSTRUCTION_STEP)) {
+            int instructionStep =
+                    getArguments().getInt(RecipeInstructionsListActivity.INSTRUCTION_STEP) - 1;
 
-                if (instructionStep >= 0) {
-                    Cursor cursor = getActivity().getContentResolver()
-                            .query(BakingProvider.StepsTable.CONTENT_URI
-                                    , null
-                                    , StepsColumns.RECIPE_ID + "=" + recipeId
-                                            + " AND " + StepsColumns.STEPS + "=" + instructionStep
-                                    , null
-                                    , null);
+            if (instructionStep >= 0) {
+                Cursor cursor = getActivity().getContentResolver()
+                        .query(BakingProvider.StepsTable.CONTENT_URI
+                                , null
+                                , StepsColumns.RECIPE_ID + "=" + recipeId
+                                        + " AND " + StepsColumns.STEPS + "=" + instructionStep
+                                , null
+                                , null);
 
-                    if (cursor != null) {
-                        if (cursor.moveToFirst()) {
-                            mShortDescription = cursor.getString(
-                                    cursor.getColumnIndex(StepsColumns.SHORT_DESCRIPTION));
-                            mDescription = cursor.getString(
-                                    cursor.getColumnIndex(StepsColumns.LONG_DESCRIPTION));
-                            mVideoUrl = cursor.getString(
-                                    cursor.getColumnIndex(StepsColumns.VIDEO_URL));
-                        }
+                if (cursor != null) {
+                    if (cursor.moveToFirst()) {
+                        mShortDescription = cursor.getString(
+                                cursor.getColumnIndex(StepsColumns.SHORT_DESCRIPTION));
+                        mDescription = cursor.getString(
+                                cursor.getColumnIndex(StepsColumns.LONG_DESCRIPTION));
+                        mVideoUrl = cursor.getString(
+                                cursor.getColumnIndex(StepsColumns.VIDEO_URL));
                     }
-
-                    if (cursor != null) {
-                        cursor.close();
-                    }
-                } else {
-
-                    Cursor cursor = getActivity().getContentResolver()
-                            .query(BakingProvider.IngredientsTable.CONTENT_URI
-                                    , null
-                                    , IngredientsColumns.RECIPE_ID + "=" + recipeId
-                                    , null
-                                    , null);
-
-                    if (cursor != null) {
-                        int i = 1;
-                        if (cursor.moveToFirst()) {
-                            do {
-                                String ingredient = cursor.getString(
-                                        cursor.getColumnIndex(IngredientsColumns.INGREDIENT));
-                                String measure = cursor.getString(
-                                        cursor.getColumnIndex(IngredientsColumns.MEASURE));
-                                Float quantity = cursor.getFloat(
-                                        cursor.getColumnIndex(IngredientsColumns.QUANTITY));
-
-                                mDescription += i + "." + ingredient + "\n"
-                                        + quantity + " "
-                                        + measure + "\n\n";
-                                i++;
-                            } while (cursor.moveToNext());
-                        }
-                    }
-
-                    if (cursor != null) {
-                        cursor.close();
-                    }
-
-                    mShortDescription = getActivity().getString(R.string.ingredients);
                 }
+
+                if (cursor != null) {
+                    cursor.close();
+                }
+            } else {
+
+                Cursor cursor = getActivity().getContentResolver()
+                        .query(BakingProvider.IngredientsTable.CONTENT_URI
+                                , null
+                                , IngredientsColumns.RECIPE_ID + "=" + recipeId
+                                , null
+                                , null);
+
+                if (cursor != null) {
+                    int i = 1;
+                    if (cursor.moveToFirst()) {
+                        do {
+                            String ingredient = cursor.getString(
+                                    cursor.getColumnIndex(IngredientsColumns.INGREDIENT));
+                            String measure = cursor.getString(
+                                    cursor.getColumnIndex(IngredientsColumns.MEASURE));
+                            Float quantity = cursor.getFloat(
+                                    cursor.getColumnIndex(IngredientsColumns.QUANTITY));
+
+                            mDescription += i + "." + ingredient + "\n"
+                                    + quantity + " "
+                                    + measure + "\n\n";
+                            i++;
+                        } while (cursor.moveToNext());
+                    }
+                }
+
+                if (cursor != null) {
+                    cursor.close();
+                }
+
+                mShortDescription = getActivity().getString(R.string.ingredients);
             }
         }
 
-        if (getArguments().containsKey(RecipesActivity.RECIPE_NAME)) {
-            String name = getArguments().getString(RecipesActivity.RECIPE_NAME);
 
-            Activity activity = this.getActivity();
-            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout)
-                    activity.findViewById(R.id.toolbar_layout);
-            if (appBarLayout != null) {
-                appBarLayout.setTitle(name);
-            }
+        String name = ApplicationPreferences.getRecipeName(getContext());
+
+        Activity activity = this.getActivity();
+        CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout)
+                activity.findViewById(R.id.toolbar_layout);
+        if (appBarLayout != null) {
+            appBarLayout.setTitle(name);
         }
     }
 

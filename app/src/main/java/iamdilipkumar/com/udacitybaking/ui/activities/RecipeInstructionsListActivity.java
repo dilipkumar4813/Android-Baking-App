@@ -13,6 +13,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import iamdilipkumar.com.udacitybaking.R;
 import iamdilipkumar.com.udacitybaking.adapters.RecipesInstructionsAdapter;
+import iamdilipkumar.com.udacitybaking.data.ApplicationPreferences;
 import iamdilipkumar.com.udacitybaking.data.BakingProvider;
 import iamdilipkumar.com.udacitybaking.data.StepsColumns;
 import iamdilipkumar.com.udacitybaking.models.Step;
@@ -39,7 +40,7 @@ public class RecipeInstructionsListActivity extends AppCompatActivity implements
 
     public static final String INSTRUCTION_STEP = "instruction_step";
     public static final String INSTRUCTIONS = "instructions";
-    public static final String INSTRUCTIONS_SCROLL = "instructions_scroll_position";
+    // public static final String INSTRUCTIONS_SCROLL = "instructions_scroll_position";
 
     @BindView(R.id.recipeitem_list)
     RecyclerView instructionsItems;
@@ -59,40 +60,31 @@ public class RecipeInstructionsListActivity extends AppCompatActivity implements
         }
 
         if (savedInstanceState == null) {
-            Bundle extras = getIntent().getExtras();
-            if (extras != null) {
-                if (extras.containsKey(RecipesActivity.RECIPE_NAME)) {
-                    mRecipeName = extras.getString(RecipesActivity.RECIPE_NAME);
-                    toolbar.setTitle(mRecipeName);
+            mRecipeName = ApplicationPreferences.getRecipeName(this);
+            mRecipeId = ApplicationPreferences.getRecipeId(this);
+            toolbar.setTitle(mRecipeName);
+
+            Cursor cursor = getContentResolver().query(BakingProvider.StepsTable.CONTENT_URI,
+                    null, StepsColumns.RECIPE_ID + "=" + mRecipeId, null, null);
+
+            if (cursor != null) {
+                if (cursor.moveToFirst()) {
+                    do {
+                        String shortDescription = cursor.getString(cursor.getColumnIndex(StepsColumns.SHORT_DESCRIPTION));
+                        String step = cursor.getString(cursor.getColumnIndex(StepsColumns.STEPS));
+
+                        Step instruction = new Step();
+                        instruction.setShortDescription(shortDescription);
+                        instruction.setId(Integer.parseInt(step));
+
+                        mSteps.add(instruction);
+
+                    } while (cursor.moveToNext());
                 }
+            }
 
-                if (extras.containsKey(RecipesActivity.RECIPE_ID)) {
-                    mRecipeId = extras.getInt(RecipesActivity.RECIPE_ID);
-                    Cursor cursor = getContentResolver().query(BakingProvider.StepsTable.CONTENT_URI,
-                            null, StepsColumns.RECIPE_ID + "=" + mRecipeId, null, null);
-
-                    if (cursor != null) {
-                        if (cursor.moveToFirst()) {
-                            do {
-                                String shortDescription = cursor.getString(cursor.getColumnIndex(StepsColumns.SHORT_DESCRIPTION));
-                                String step = cursor.getString(cursor.getColumnIndex(StepsColumns.STEPS));
-
-                                Step instruction = new Step();
-                                instruction.setShortDescription(shortDescription);
-                                instruction.setId(Integer.parseInt(step));
-
-                                mSteps.add(instruction);
-
-                            } while (cursor.moveToNext());
-                        }
-                    }
-
-                    if (cursor != null) {
-                        cursor.close();
-                    }
-                }
-            } else {
-                toolbar.setTitle(getTitle());
+            if (cursor != null) {
+                cursor.close();
             }
 
             Step instruction = new Step();
@@ -117,12 +109,9 @@ public class RecipeInstructionsListActivity extends AppCompatActivity implements
         }*/
 
         if (findViewById(R.id.recipeitem_detail_container) != null) {
-            // The detail container view will be present only in the
-            // large-screen layouts (res/values-w900dp).
-            // If this view is present, then the
-            // activity should be in two-pane mode.
             mTwoPane = true;
         }
+
     }
 
     @Override
@@ -140,7 +129,6 @@ public class RecipeInstructionsListActivity extends AppCompatActivity implements
         outState.putParcelableArrayList(INSTRUCTIONS, mSteps);
         outState.putString(RecipesActivity.RECIPE_NAME, mRecipeName);
         outState.putInt(RecipesActivity.RECIPE_ID, mRecipeId);
-        //outState.putInt(INSTRUCTIONS_SCROLL,instructionsItems.getFi)
         super.onSaveInstanceState(outState);
     }
 
@@ -149,9 +137,7 @@ public class RecipeInstructionsListActivity extends AppCompatActivity implements
 
         if (mTwoPane) {
             Bundle arguments = new Bundle();
-            arguments.putInt(RecipesActivity.RECIPE_ID, mRecipeId);
             arguments.putInt(INSTRUCTION_STEP, position);
-            arguments.putString(RecipesActivity.RECIPE_NAME, mRecipeName);
             RecipeInstructionDetailFragment fragment = new RecipeInstructionDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
@@ -159,9 +145,7 @@ public class RecipeInstructionsListActivity extends AppCompatActivity implements
                     .commit();
         } else {
             Intent intent = new Intent(this, RecipeInstructionDetailActivity.class);
-            intent.putExtra(RecipesActivity.RECIPE_ID, mRecipeId);
             intent.putExtra(INSTRUCTION_STEP, position);
-            intent.putExtra(RecipesActivity.RECIPE_NAME, mRecipeName);
             startActivity(intent);
         }
     }

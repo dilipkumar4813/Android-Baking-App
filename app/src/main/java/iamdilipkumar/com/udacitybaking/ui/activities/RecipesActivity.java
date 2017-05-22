@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,12 +13,16 @@ import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
+
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import iamdilipkumar.com.udacitybaking.R;
 import iamdilipkumar.com.udacitybaking.adapters.RecipesAdapter;
+import iamdilipkumar.com.udacitybaking.data.ApplicationPreferences;
 import iamdilipkumar.com.udacitybaking.data.BakingProvider;
 import iamdilipkumar.com.udacitybaking.models.Ingredient;
 import iamdilipkumar.com.udacitybaking.models.Recipe;
@@ -25,6 +30,7 @@ import iamdilipkumar.com.udacitybaking.models.Step;
 import iamdilipkumar.com.udacitybaking.utils.ShareUtils;
 import iamdilipkumar.com.udacitybaking.utils.networking.BakingApiInterface;
 import iamdilipkumar.com.udacitybaking.utils.networking.NetworkUtils;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -63,6 +69,28 @@ public class RecipesActivity extends AppCompatActivity implements AdapterView.On
             mCompositeDisposable.add(bakingInterface.getRecipes()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
+                    /*.subscribe(new Subscriber<ArrayList<Recipe>>() {
+
+                        @Override
+                        public final void onError(Throwable e) {
+                            Log.d("GithubDemo", e.getMessage());
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+
+                        @Override
+                        public void onSubscribe(Subscription s) {
+
+                        }
+
+                        @Override
+                        public final void onNext(ArrayList<Recipe> response) {
+                            apiResponse(response);
+                        }
+                    }));*/
                     .subscribe(this::apiResponse, this::apiError));
         } else {
 
@@ -169,9 +197,10 @@ public class RecipesActivity extends AppCompatActivity implements AdapterView.On
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        ApplicationPreferences.setRecipeId(this,mRecipeItems.get(position).getId());
+        ApplicationPreferences.setRecipeName(this,mRecipeItems.get(position).getName());
+
         Intent recipesInstructionsIntent = new Intent(this, RecipeInstructionsListActivity.class);
-        recipesInstructionsIntent.putExtra(RECIPE_ID, mRecipeItems.get(position).getId());
-        recipesInstructionsIntent.putExtra(RECIPE_NAME, mRecipeItems.get(position).getName());
         startActivity(recipesInstructionsIntent);
     }
 
