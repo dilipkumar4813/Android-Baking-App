@@ -69,28 +69,6 @@ public class RecipesActivity extends AppCompatActivity implements AdapterView.On
             mCompositeDisposable.add(bakingInterface.getRecipes()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    /*.subscribe(new Subscriber<ArrayList<Recipe>>() {
-
-                        @Override
-                        public final void onError(Throwable e) {
-                            Log.d("GithubDemo", e.getMessage());
-                        }
-
-                        @Override
-                        public void onComplete() {
-
-                        }
-
-                        @Override
-                        public void onSubscribe(Subscription s) {
-
-                        }
-
-                        @Override
-                        public final void onNext(ArrayList<Recipe> response) {
-                            apiResponse(response);
-                        }
-                    }));*/
                     .subscribe(this::apiResponse, this::apiError));
         } else {
 

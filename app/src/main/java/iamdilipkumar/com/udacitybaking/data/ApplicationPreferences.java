@@ -1,6 +1,7 @@
 package iamdilipkumar.com.udacitybaking.data;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -16,7 +17,8 @@ import iamdilipkumar.com.udacitybaking.R;
 public class ApplicationPreferences {
 
     private static final String RECIPE_ID = "recipe_id";
-    private static final String RECIPE_NAME = "recipe_id";
+    private static final String RECIPE_NAME = "recipe_name";
+    private static final String SESSION = "session";
 
     private static SharedPreferences getDefaultPreferences(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
