@@ -7,4 +7,5 @@
     <string name="share_title">Share recipes</string>
     <string name="share_content">Recipes your best way to relax yourself</string>
     <string name="share">Share</string>
+    <string name="ingredients">Ingredients</string>
 </resources>

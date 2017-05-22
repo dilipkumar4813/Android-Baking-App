@@ -122,7 +122,7 @@ public class RecipeInstructionDetailFragment extends Fragment {
                         cursor.close();
                     }
 
-                    mShortDescription = "Ingredients";
+                    mShortDescription = getActivity().getString(R.string.ingredients);
                 }
             }
         }

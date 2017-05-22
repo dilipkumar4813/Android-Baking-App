@@ -96,7 +96,7 @@ public class RecipeInstructionsListActivity extends AppCompatActivity implements
             }
 
             Step instruction = new Step();
-            instruction.setShortDescription("Ingredients");
+            instruction.setShortDescription(getString(R.string.ingredients));
             instruction.setId(-1);
             mSteps.add(instruction);
 
