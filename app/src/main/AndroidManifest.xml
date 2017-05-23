@@ -21,7 +21,7 @@
         <activity
             android:name=".ui.activities.RecipeInstructionsListActivity"
             android:label="@string/title_recipeitem_list"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.activities.RecipeInstructionDetailActivity"
             android:label="@string/title_recipeitem_detail"
@@ -36,6 +36,24 @@
             android:name=".data.generated.BakingProvider"
             android:authorities="iamdilipkumar.com.udacitybaking.data.provider"
             android:exported="false" />
+
+        <receiver
+            android:name=".BakingWidget"
+            android:icon="@mipmap/ic_launcher">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/baking_widget_info" />
+        </receiver>
+
+        <activity android:name=".BakingWidgetConfigureActivity">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

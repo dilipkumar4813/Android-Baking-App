@@ -7,8 +7,11 @@
     <string name="share_title">Share recipes</string>
     <string name="share_content">Recipes your best way to relax yourself</string>
     <string name="share">Share</string>
-    <string name="ingredients">Ingredients</string>
+    <string name="ingredients">Recipe ingredients</string>
 
     <string name="instruction_previous">Previous</string>
     <string name="instruction_next">Skip next</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="configure">Configure</string>
+    <string name="add_widget">Add widget</string>
 </resources>
