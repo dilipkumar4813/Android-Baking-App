@@ -101,6 +101,10 @@ public class RecipeInstructionDetailFragment extends Fragment {
             previousInstruction.setVisibility(View.INVISIBLE);
         }
 
+        if (ApplicationPreferences.getTotalInstructions(getContext()) == mInstructionStep) {
+            nextInstruction.setVisibility(View.INVISIBLE);
+        }
+
         loadMediaPlayer();
 
         if (mDescription != null) {

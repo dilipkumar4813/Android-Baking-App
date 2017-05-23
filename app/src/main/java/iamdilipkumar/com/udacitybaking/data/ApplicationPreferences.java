@@ -18,7 +18,7 @@ public class ApplicationPreferences {
 
     private static final String RECIPE_ID = "recipe_id";
     private static final String RECIPE_NAME = "recipe_name";
-    private static final String SESSION = "session";
+    private static final String RECIPE_INSTRUCTIONS = "instructions";
 
     private static SharedPreferences getDefaultPreferences(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context);
@@ -47,5 +47,15 @@ public class ApplicationPreferences {
 
     public static String getRecipeName(Context context) {
         return getDefaultPreferences(context).getString(RECIPE_NAME, context.getString(R.string.app_name));
+    }
+
+    public static void setTotalInstructions(Context context, int instructions) {
+        SharedPreferences.Editor editor = getEditor(context);
+        editor.putInt(RECIPE_INSTRUCTIONS, instructions - 1);
+        editor.commit();
+    }
+
+    public static int getTotalInstructions(Context context) {
+        return getDefaultPreferences(context).getInt(RECIPE_INSTRUCTIONS, 0);
     }
 }

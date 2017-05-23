@@ -87,6 +87,8 @@ public class RecipeInstructionsListActivity extends AppCompatActivity implements
                 cursor.close();
             }
 
+            ApplicationPreferences.setTotalInstructions(this, mSteps.size());
+
             Step instruction = new Step();
             instruction.setShortDescription(getString(R.string.ingredients));
             instruction.setId(-1);
