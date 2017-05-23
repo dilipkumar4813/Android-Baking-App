@@ -27,8 +27,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/food_banner"
-                android:src="#77000000"
-                android:scaleType="centerCrop"/>
+                android:contentDescription="@string/app_name"
+                android:scaleType="centerCrop"
+                android:src="#77000000" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/detail_toolbar"
@@ -47,7 +48,7 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <android.support.design.widget.FloatingActionButton
+    <!--<android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -55,6 +56,6 @@
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@+id/recipeitem_detail_container"
         app:layout_anchorGravity="top|end"
-        app:srcCompat="@android:drawable/stat_notify_chat" />
+        app:srcCompat="@android:drawable/stat_notify_chat" />-->
 
 </android.support.design.widget.CoordinatorLayout>

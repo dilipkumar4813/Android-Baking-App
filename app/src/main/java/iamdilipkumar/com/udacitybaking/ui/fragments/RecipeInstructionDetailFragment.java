@@ -51,7 +51,14 @@ public class RecipeInstructionDetailFragment extends Fragment {
     @BindView(R.id.tv_title)
     TextView titleText;
 
+    @BindView(R.id.tv_instruction_previous)
+    TextView previousInstruction;
+
+    @BindView(R.id.tv_instruction_next)
+    TextView nextInstruction;
+
     private String mShortDescription, mDescription = "", mVideoUrl;
+    private int mInstructionStep;
 
     public RecipeInstructionDetailFragment() {
     }
@@ -63,68 +70,15 @@ public class RecipeInstructionDetailFragment extends Fragment {
         int recipeId = ApplicationPreferences.getRecipeId(getContext());
 
         if (getArguments().containsKey(RecipeInstructionsListActivity.INSTRUCTION_STEP)) {
-            int instructionStep =
+            mInstructionStep =
                     getArguments().getInt(RecipeInstructionsListActivity.INSTRUCTION_STEP) - 1;
 
-            if (instructionStep >= 0) {
-                Cursor cursor = getActivity().getContentResolver()
-                        .query(BakingProvider.StepsTable.CONTENT_URI
-                                , null
-                                , StepsColumns.RECIPE_ID + "=" + recipeId
-                                        + " AND " + StepsColumns.STEPS + "=" + instructionStep
-                                , null
-                                , null);
-
-                if (cursor != null) {
-                    if (cursor.moveToFirst()) {
-                        mShortDescription = cursor.getString(
-                                cursor.getColumnIndex(StepsColumns.SHORT_DESCRIPTION));
-                        mDescription = cursor.getString(
-                                cursor.getColumnIndex(StepsColumns.LONG_DESCRIPTION));
-                        mVideoUrl = cursor.getString(
-                                cursor.getColumnIndex(StepsColumns.VIDEO_URL));
-                    }
-                }
-
-                if (cursor != null) {
-                    cursor.close();
-                }
+            if (mInstructionStep >= 0) {
+                getInstructionStep(recipeId);
             } else {
-
-                Cursor cursor = getActivity().getContentResolver()
-                        .query(BakingProvider.IngredientsTable.CONTENT_URI
-                                , null
-                                , IngredientsColumns.RECIPE_ID + "=" + recipeId
-                                , null
-                                , null);
-
-                if (cursor != null) {
-                    int i = 1;
-                    if (cursor.moveToFirst()) {
-                        do {
-                            String ingredient = cursor.getString(
-                                    cursor.getColumnIndex(IngredientsColumns.INGREDIENT));
-                            String measure = cursor.getString(
-                                    cursor.getColumnIndex(IngredientsColumns.MEASURE));
-                            Float quantity = cursor.getFloat(
-                                    cursor.getColumnIndex(IngredientsColumns.QUANTITY));
-
-                            mDescription += i + "." + ingredient + "\n"
-                                    + quantity + " "
-                                    + measure + "\n\n";
-                            i++;
-                        } while (cursor.moveToNext());
-                    }
-                }
-
-                if (cursor != null) {
-                    cursor.close();
-                }
-
-                mShortDescription = getActivity().getString(R.string.ingredients);
+                getIngredients(recipeId);
             }
         }
-
 
         String name = ApplicationPreferences.getRecipeName(getContext());
 
@@ -143,13 +97,90 @@ public class RecipeInstructionDetailFragment extends Fragment {
 
         ButterKnife.bind(this, rootView);
 
+        if (mInstructionStep == -1) {
+            previousInstruction.setVisibility(View.INVISIBLE);
+        }
+
+        loadMediaPlayer();
+
+        if (mDescription != null) {
+            descriptionText.setText(mDescription);
+        }
+
+        if (mShortDescription != null) {
+            titleText.setText(mShortDescription);
+        }
+
+        return rootView;
+    }
+
+    private void getInstructionStep(int recipeId) {
+        Cursor cursor = getActivity().getContentResolver()
+                .query(BakingProvider.StepsTable.CONTENT_URI
+                        , null
+                        , StepsColumns.RECIPE_ID + "=" + recipeId
+                                + " AND " + StepsColumns.STEPS + "=" + mInstructionStep
+                        , null
+                        , null);
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                mShortDescription = cursor.getString(
+                        cursor.getColumnIndex(StepsColumns.SHORT_DESCRIPTION));
+                mDescription = cursor.getString(
+                        cursor.getColumnIndex(StepsColumns.LONG_DESCRIPTION));
+                mVideoUrl = cursor.getString(
+                        cursor.getColumnIndex(StepsColumns.VIDEO_URL));
+            }
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+    }
+
+    private void getIngredients(int recipeId) {
+        Cursor cursor = getActivity().getContentResolver()
+                .query(BakingProvider.IngredientsTable.CONTENT_URI
+                        , null
+                        , IngredientsColumns.RECIPE_ID + "=" + recipeId
+                        , null
+                        , null);
+
+        if (cursor != null) {
+            int i = 1;
+            if (cursor.moveToFirst()) {
+                do {
+                    String ingredient = cursor.getString(
+                            cursor.getColumnIndex(IngredientsColumns.INGREDIENT));
+                    String measure = cursor.getString(
+                            cursor.getColumnIndex(IngredientsColumns.MEASURE));
+                    Float quantity = cursor.getFloat(
+                            cursor.getColumnIndex(IngredientsColumns.QUANTITY));
+
+                    mDescription += i + "." + ingredient + "\n"
+                            + quantity + " "
+                            + measure + "\n\n";
+                    i++;
+                } while (cursor.moveToNext());
+            }
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        mShortDescription = getActivity().getString(R.string.ingredients);
+    }
+
+    private void loadMediaPlayer() {
         TrackSelector trackSelector = new DefaultTrackSelector();
         LoadControl loadControl = new DefaultLoadControl();
         SimpleExoPlayer mExoPlayer = ExoPlayerFactory.newSimpleInstance(getContext()
                 , trackSelector, loadControl);
         simpleExoPlayer.setPlayer(mExoPlayer);
 
-        String userAgent = Util.getUserAgent(getContext(), "Baking");
+        String userAgent = Util.getUserAgent(getContext(), getActivity().getString(R.string.app_name));
 
         if (mVideoUrl != null) {
             if (!mVideoUrl.isEmpty()) {
@@ -164,15 +195,5 @@ public class RecipeInstructionDetailFragment extends Fragment {
         } else {
             simpleExoPlayer.setVisibility(View.GONE);
         }
-
-        if (mDescription != null) {
-            descriptionText.setText(mDescription);
-        }
-
-        if (mShortDescription != null) {
-            titleText.setText(mShortDescription);
-        }
-
-        return rootView;
     }
 }

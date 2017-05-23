@@ -8,4 +8,7 @@
     <string name="share_content">Recipes your best way to relax yourself</string>
     <string name="share">Share</string>
     <string name="ingredients">Ingredients</string>
+
+    <string name="instruction_previous">Previous</string>
+    <string name="instruction_next">Skip next</string>
 </resources>
