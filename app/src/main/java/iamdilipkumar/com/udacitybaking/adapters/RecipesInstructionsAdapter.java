@@ -37,7 +37,7 @@ public class RecipesInstructionsAdapter extends RecyclerView.Adapter<RecipesInst
     @Override
     public InstructionsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.recipeitem_list_content, parent, false);
+                .inflate(R.layout.item_recipe_list_content, parent, false);
         return new InstructionsViewHolder(view);
     }
 

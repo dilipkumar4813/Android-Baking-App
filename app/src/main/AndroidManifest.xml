@@ -37,23 +37,19 @@
             android:authorities="iamdilipkumar.com.udacitybaking.data.provider"
             android:exported="false" />
 
-        <receiver
-            android:name=".BakingWidget"
-            android:icon="@mipmap/ic_launcher">
+        <receiver android:name=".widget.RecipesWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/baking_widget_info" />
+                android:resource="@xml/recipes_widget_info" />
         </receiver>
 
-        <activity android:name=".BakingWidgetConfigureActivity">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity>
+        <service
+            android:name=".services.RecipesWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 
 </manifest>
