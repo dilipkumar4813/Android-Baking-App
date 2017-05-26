@@ -12,5 +12,6 @@
     <string name="instruction_previous">Previous</string>
     <string name="instruction_next">Skip next</string>
 
-    <string name="appwidget_text">EXAMPLE</string>
+    <string name="appwidget_text">Udacity Recipes</string>
+    <string name="appwidget_no_item">No recipes</string>
 </resources>

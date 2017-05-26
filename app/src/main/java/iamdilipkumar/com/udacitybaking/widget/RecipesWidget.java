@@ -19,58 +19,30 @@ import iamdilipkumar.com.udacitybaking.ui.activities.RecipesActivity;
  */
 public class RecipesWidget extends AppWidgetProvider {
 
-    public static final String UPDATE_MEETING_ACTION = "android.appwidget.action.APPWIDGET_UPDATE";
-    public static final String EXTRA_ITEM = "iamdilipkumar.com.udacitybaking.widget.EXTRA_ITEM";
-
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId) {
-
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipes_widget);
-        appWidgetManager.updateAppWidget(appWidgetId, views);
-    }
-
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        // There may be multiple widgets active, so update all of them
+
         for (int appWidgetId : appWidgetIds) {
-            Log.e("check", "updating");
-            Intent intent = new Intent(context, RecipesWidgetService.class);
-            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-            intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
 
-            RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.recipes_widget);
-            rv.setRemoteAdapter(appWidgetId, R.id.recipes_list, intent);
-            //rv.setRemoteAdapter(R.id.recipes_list, intent);
+            RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.recipes_widget);
 
-            Intent startActivityIntent = new Intent(context, RecipesActivity.class);
+            Intent serviceIntent = new Intent(context, RecipesWidgetService.class);
+            serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+            serviceIntent.setData(Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME))); // embed extras so they don't get ignored
+            remoteViews.setRemoteAdapter(R.id.stack_widget_view, serviceIntent);
+            remoteViews.setEmptyView(R.id.stack_widget_view, R.id.stackWidgetEmptyView);
 
-            startActivityIntent.setAction(UPDATE_MEETING_ACTION);
-            startActivityIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-            intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
-            PendingIntent startActivityPendingIntent;
-            startActivityPendingIntent=PendingIntent.getBroadcast(context,0,startActivityIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+            Intent viewIntent = new Intent(context, RecipesActivity.class);
+            //viewIntent.setAction(MainActivity.ACTION_VIEW);
+            viewIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+            viewIntent.setData(Uri.parse(viewIntent.toUri(Intent.URI_INTENT_SCHEME)));
 
-            // PendingIntent startActivityPendingIntent = PendingIntent.getActivity(context, 0, startActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            rv.setPendingIntentTemplate(R.id.recipes_list, startActivityPendingIntent);
+            PendingIntent viewPendingIntent = PendingIntent.getActivity(context, 0, viewIntent, 0);
+            remoteViews.setPendingIntentTemplate(R.id.stack_widget_view, viewPendingIntent);
 
-            updateAppWidget(context, appWidgetManager, appWidgetId);
+            appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
         }
-
         super.onUpdate(context, appWidgetManager, appWidgetIds);
-    }
-
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        AppWidgetManager mgr = AppWidgetManager.getInstance(context);
-
-        if (intent.getAction().equals(UPDATE_MEETING_ACTION)) {
-            int appWidgetIds[] = mgr.getAppWidgetIds(new ComponentName(context, RecipesWidget.class));
-            Log.e("received", intent.getAction());
-            mgr.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.recipes_list);
-        }
-
-        super.onReceive(context, intent);
     }
 
     @Override
