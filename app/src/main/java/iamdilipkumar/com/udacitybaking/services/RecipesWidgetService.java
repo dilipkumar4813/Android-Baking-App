@@ -1,15 +1,19 @@
 package iamdilipkumar.com.udacitybaking.services;
 
+import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import java.util.ArrayList;
 
 import iamdilipkumar.com.udacitybaking.R;
+import iamdilipkumar.com.udacitybaking.data.BakingColumns;
+import iamdilipkumar.com.udacitybaking.data.BakingProvider;
+import iamdilipkumar.com.udacitybaking.models.Recipe;
 
 /**
  * Created on 26/05/17.
@@ -27,35 +31,41 @@ public class RecipesWidgetService extends RemoteViewsService {
 }
 
 class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
-    private ArrayList<String> mBuzzes = new ArrayList<>();
+    private ArrayList<Recipe> recipes = new ArrayList<>();
     private Context mContext;
+    private int mAppWidgetId;
 
     StackRemoteViewsFactory(Context context, Intent intent) {
         mContext = context;
-        Log.d("intent", "" + intent.getExtras());
+        mAppWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
     }
 
     public void onCreate() {
     }
 
     public void onDestroy() {
-        mBuzzes.clear();
+        recipes.clear();
     }
 
     public int getCount() {
-        return mBuzzes.size();
+        return recipes.size();
     }
 
     public RemoteViews getViewAt(int position) {
         RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.item_widget);
 
         if (position <= getCount()) {
-            String buzz = mBuzzes.get(position);
+            Recipe recipe = recipes.get(position);
 
-            rv.setTextViewText(R.id.tv_recipe_name, buzz);
-            rv.setTextViewText(R.id.tv_servings, "serves 4");
+            rv.setTextViewText(R.id.tv_recipe_name, recipe.getName());
+            rv.setTextViewText(R.id.tv_servings, "Serves :" + recipe.getServings());
 
-            // store the buzz ID in the extras so the main activity can use it
+            if (position % 2 == 0) {
+                rv.setImageViewResource(R.id.iv_recipe, R.drawable.background_stack_view);
+            } else {
+                rv.setImageViewResource(R.id.iv_recipe, R.drawable.food_banner);
+            }
+
             Bundle extras = new Bundle();
             extras.putString("id", "testid");
             Intent fillInIntent = new Intent();
@@ -83,8 +93,32 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     }
 
     public void onDataSetChanged() {
-        mBuzzes.add("test");
-        mBuzzes.add("test2");
-        mBuzzes.add("test3");
+        getRecipes();
+    }
+
+    private void getRecipes() {
+
+        Cursor cursor = mContext.getContentResolver().query(BakingProvider.BakingTable.CONTENT_URI,
+                null, null, null, null);
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
+                    String name = cursor.getString(cursor.getColumnIndex(BakingColumns.NAME));
+                    int servings = cursor.getInt(cursor.getColumnIndex(BakingColumns.SERVINGS));
+
+                    Recipe recipe = new Recipe();
+                    recipe.setName(name);
+                    recipe.setServings(servings);
+
+                    recipes.add(recipe);
+
+                } while (cursor.moveToNext());
+            }
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
     }
 }

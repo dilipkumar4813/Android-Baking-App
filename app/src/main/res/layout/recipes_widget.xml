@@ -13,8 +13,9 @@
         android:id="@+id/stackWidgetEmptyView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/colorAccent"
         android:gravity="center"
         android:text="@string/appwidget_no_item"
-        android:textSize="16sp"
+        android:textSize="@dimen/widget_item_title"
         android:textStyle="bold" />
 </RelativeLayout>

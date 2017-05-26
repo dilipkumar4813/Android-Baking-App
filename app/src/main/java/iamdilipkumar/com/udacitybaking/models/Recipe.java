@@ -94,6 +94,10 @@ public class Recipe implements Parcelable {
         return 0;
     }
 
+    public Recipe() {
+
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
@@ -102,7 +106,7 @@ public class Recipe implements Parcelable {
         dest.writeString(image);
     }
 
-    protected Recipe(Parcel in) {
+    private Recipe(Parcel in) {
         id = in.readInt();
         name = in.readString();
         servings = in.readInt();
