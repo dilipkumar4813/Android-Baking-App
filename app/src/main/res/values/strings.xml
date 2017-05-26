@@ -14,4 +14,5 @@
 
     <string name="appwidget_text">Udacity Recipes</string>
     <string name="appwidget_no_item">No recipes</string>
+    <string name="recipe_serves_text">Serves</string>
 </resources>

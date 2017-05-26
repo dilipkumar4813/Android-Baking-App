@@ -14,6 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity android:name=".ui.activities.RecipesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -22,10 +23,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ui.activities.RecipeInstructionsListActivity"
             android:label="@string/title_recipeitem_list"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".ui.activities.RecipeInstructionDetailActivity"
             android:label="@string/title_recipeitem_detail"

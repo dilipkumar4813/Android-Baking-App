@@ -18,6 +18,7 @@ public class ApplicationPreferences {
     private static final String RECIPE_ID = "recipe_id";
     private static final String RECIPE_NAME = "recipe_name";
     private static final String RECIPE_INSTRUCTIONS = "instructions";
+    private static final String RECIPE_IMAGE = "recipe_image";
 
     /**
      * Method to return the default shared preferences
@@ -104,5 +105,27 @@ public class ApplicationPreferences {
      */
     public static int getTotalInstructions(Context context) {
         return getDefaultPreferences(context).getInt(RECIPE_INSTRUCTIONS, 0);
+    }
+
+    /**
+     * Method to store the Recipe image URL
+     *
+     * @param context      - Used to access the SharedPreference Editor
+     * @param image - The image URL for the recipe
+     */
+    public static void setRecipeImage(Context context, String image) {
+        SharedPreferences.Editor editor = getEditor(context);
+        editor.putString(RECIPE_IMAGE, image);
+        editor.commit();
+    }
+
+    /**
+     * Method to return the Recipe image URL
+     *
+     * @param context - Used to access the SharedPreference Editor
+     * @return - Returns the image URL for the recipe
+     */
+    public static String getRecipeImage(Context context) {
+        return getDefaultPreferences(context).getString(RECIPE_IMAGE, "");
     }
 }

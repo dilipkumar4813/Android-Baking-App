@@ -33,7 +33,10 @@ public class RecipesAdapter extends BaseAdapter {
     private Context mContext;
 
     @BindView(R.id.tv_recipe_title)
-    TextView tvRecipeTitle;
+    TextView recipeTitle;
+
+    @BindView(R.id.tv_recipe_serves)
+    TextView recipeServesText;
 
     @BindView(R.id.rl_recipe)
     RelativeLayout recipeContainer;
@@ -71,8 +74,11 @@ public class RecipesAdapter extends BaseAdapter {
         }
 
         Recipe item = (Recipe) getItem(position);
+        String servesText =
+                mContext.getString(R.string.recipe_serves_text) + " : " + item.getServings();
 
-        tvRecipeTitle.setText(item.getName());
+        recipeTitle.setText(item.getName());
+        recipeServesText.setText(servesText);
 
         Random rand = new Random();
         int r = rand.nextInt(255);
@@ -80,15 +86,15 @@ public class RecipesAdapter extends BaseAdapter {
         int b = rand.nextInt(255);
         recipeContainer.setBackgroundColor(Color.rgb(r, g, b));
 
-        //String url = item.getImage();
+        String url = item.getImage();
 
-        /*if (url != null) {
+        if (url != null) {
             if (!url.isEmpty()) {
                 Glide.with(mContext).load(url).centerCrop().into(recipeImage);
             }
-        }*/
+        }
 
-        String url = "http://img.huffingtonpost.com/asset/crop_0_127_1254_619,scalefit_720_noupscale/575050041200002e00895299.jpeg";
+        //String url = "http://img.huffingtonpost.com/asset/crop_0_127_1254_619,scalefit_720_noupscale/575050041200002e00895299.jpeg";
         Glide.with(mContext).load(url).centerCrop().into(recipeImage);
 
         return convertView;

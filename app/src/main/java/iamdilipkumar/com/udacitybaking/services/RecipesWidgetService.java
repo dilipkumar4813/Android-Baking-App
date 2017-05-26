@@ -58,7 +58,8 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
             Recipe recipe = recipes.get(position);
 
             rv.setTextViewText(R.id.tv_recipe_name, recipe.getName());
-            rv.setTextViewText(R.id.tv_servings, "Serves :" + recipe.getServings());
+            String serves = mContext.getString(R.string.recipe_serves_text) + " : ";
+            rv.setTextViewText(R.id.tv_servings, serves + recipe.getServings());
 
             if (position % 2 == 0) {
                 rv.setImageViewResource(R.id.iv_recipe, R.drawable.background_stack_view);

@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,9 +11,6 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
 
 import java.util.ArrayList;
 
@@ -30,7 +26,6 @@ import iamdilipkumar.com.udacitybaking.models.Step;
 import iamdilipkumar.com.udacitybaking.utils.ShareUtils;
 import iamdilipkumar.com.udacitybaking.utils.networking.BakingApiInterface;
 import iamdilipkumar.com.udacitybaking.utils.networking.NetworkUtils;
-import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -175,8 +170,10 @@ public class RecipesActivity extends AppCompatActivity implements AdapterView.On
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        ApplicationPreferences.setRecipeId(this,mRecipeItems.get(position).getId());
-        ApplicationPreferences.setRecipeName(this,mRecipeItems.get(position).getName());
+        Recipe recipe = mRecipeItems.get(position);
+        ApplicationPreferences.setRecipeId(this,recipe.getId());
+        ApplicationPreferences.setRecipeName(this,recipe.getName());
+        ApplicationPreferences.setRecipeImage(this,recipe.getImage());
 
         Intent recipesInstructionsIntent = new Intent(this, RecipeInstructionsListActivity.class);
         startActivity(recipesInstructionsIntent);

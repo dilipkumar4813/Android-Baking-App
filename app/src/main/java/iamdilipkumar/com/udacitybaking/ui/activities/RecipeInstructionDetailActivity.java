@@ -30,34 +30,15 @@ public class RecipeInstructionDetailActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        // savedInstanceState is non-null when there is fragment state
-        // saved from previous configurations of this activity
-        // (e.g. when rotating the screen from portrait to landscape).
-        // In this case, the fragment will automatically be re-added
-        // to its container so we don't need to manually add it.
-        // For more information, see the Fragments API guide at:
-        //
         if (savedInstanceState == null) {
-            // Create the detail fragment and add it to the activity
-            // using a fragment transaction.
             Bundle arguments = new Bundle();
 
             Bundle extras = getIntent().getExtras();
 
             if (extras != null) {
-                if (extras.containsKey(RecipesActivity.RECIPE_ID)) {
-                    arguments.putInt(RecipesActivity.RECIPE_ID,
-                            extras.getInt(RecipesActivity.RECIPE_ID));
-                }
-
                 if (extras.containsKey(RecipeInstructionsListActivity.INSTRUCTION_STEP)) {
                     arguments.putInt(RecipeInstructionsListActivity.INSTRUCTION_STEP,
                             extras.getInt(RecipeInstructionsListActivity.INSTRUCTION_STEP));
-                }
-
-                if (extras.containsKey(RecipesActivity.RECIPE_NAME)) {
-                    arguments.putString(RecipesActivity.RECIPE_NAME,
-                            extras.getString(RecipesActivity.RECIPE_NAME));
                 }
             }
 
