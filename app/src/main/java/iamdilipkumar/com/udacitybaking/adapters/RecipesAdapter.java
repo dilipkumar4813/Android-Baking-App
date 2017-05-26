@@ -94,9 +94,6 @@ public class RecipesAdapter extends BaseAdapter {
             }
         }
 
-        //String url = "http://img.huffingtonpost.com/asset/crop_0_127_1254_619,scalefit_720_noupscale/575050041200002e00895299.jpeg";
-        Glide.with(mContext).load(url).centerCrop().into(recipeImage);
-
         return convertView;
     }
 }

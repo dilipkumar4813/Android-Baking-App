@@ -24,6 +24,7 @@
             app:toolbarId="@+id/toolbar">
 
             <ImageView
+                android:id="@+id/iv_recipe_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/food_banner"

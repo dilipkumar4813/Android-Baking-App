@@ -1,13 +1,19 @@
 package iamdilipkumar.com.udacitybaking.ui.activities;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+
+import butterknife.ButterKnife;
 import iamdilipkumar.com.udacitybaking.R;
+import iamdilipkumar.com.udacitybaking.data.ApplicationPreferences;
 import iamdilipkumar.com.udacitybaking.ui.fragments.RecipeInstructionDetailFragment;
 
 /**
@@ -22,15 +28,28 @@ public class RecipeInstructionDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_instruction_detail);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
-        setSupportActionBar(toolbar);
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
 
         if (savedInstanceState == null) {
+
+            Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
+            setSupportActionBar(toolbar);
+
+            ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            }
+
+            ImageView recipeImage = ButterKnife.findById(this, R.id.iv_recipe_image);
+
+            String imageUrl = ApplicationPreferences.getRecipeImage(this);
+            if (!imageUrl.isEmpty()) {
+                Glide.with(this).load(imageUrl)
+                        .centerCrop()
+                        .placeholder(R.drawable.food_banner)
+                        .error(R.drawable.food_banner)
+                        .into(recipeImage);
+            }
+
             Bundle arguments = new Bundle();
 
             Bundle extras = getIntent().getExtras();
@@ -42,11 +61,16 @@ public class RecipeInstructionDetailActivity extends AppCompatActivity {
                 }
             }
 
-            RecipeInstructionDetailFragment fragment = new RecipeInstructionDetailFragment();
-            fragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.recipeitem_detail_container, fragment)
-                    .commit();
+            if (getResources().getConfiguration().orientation
+                    == Configuration.ORIENTATION_PORTRAIT) {
+                RecipeInstructionDetailFragment fragment = new RecipeInstructionDetailFragment();
+                fragment.setArguments(arguments);
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.recipeitem_detail_container, fragment)
+                        .commit();
+            } else {
+
+            }
         }
     }
 
