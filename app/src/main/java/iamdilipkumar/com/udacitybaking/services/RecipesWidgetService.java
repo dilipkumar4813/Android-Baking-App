@@ -1,5 +1,6 @@
 package iamdilipkumar.com.udacitybaking.services;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
@@ -11,9 +12,11 @@ import android.widget.RemoteViewsService;
 import java.util.ArrayList;
 
 import iamdilipkumar.com.udacitybaking.R;
+import iamdilipkumar.com.udacitybaking.data.ApplicationPreferences;
 import iamdilipkumar.com.udacitybaking.data.BakingColumns;
 import iamdilipkumar.com.udacitybaking.data.BakingProvider;
 import iamdilipkumar.com.udacitybaking.models.Recipe;
+import iamdilipkumar.com.udacitybaking.ui.activities.RecipeInstructionsListActivity;
 
 /**
  * Created on 26/05/17.
@@ -67,10 +70,7 @@ class StackRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
                 rv.setImageViewResource(R.id.iv_recipe, R.drawable.food_banner);
             }
 
-            Bundle extras = new Bundle();
-            extras.putString("id", "testid");
             Intent fillInIntent = new Intent();
-            fillInIntent.putExtras(extras);
             rv.setOnClickFillInIntent(R.id.stack_item, fillInIntent);
         }
 

@@ -3,11 +3,9 @@ package iamdilipkumar.com.udacitybaking.widget;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 import iamdilipkumar.com.udacitybaking.R;
@@ -33,7 +31,6 @@ public class RecipesWidget extends AppWidgetProvider {
             remoteViews.setEmptyView(R.id.stack_widget_view, R.id.stackWidgetEmptyView);
 
             Intent viewIntent = new Intent(context, RecipesActivity.class);
-            //viewIntent.setAction(MainActivity.ACTION_VIEW);
             viewIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
             viewIntent.setData(Uri.parse(viewIntent.toUri(Intent.URI_INTENT_SCHEME)));
 
