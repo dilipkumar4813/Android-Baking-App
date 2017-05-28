@@ -56,10 +56,12 @@ public class RecipeInstructionDetailFragment extends Fragment {
 
     @OnClick(R.id.tv_instruction_previous)
     void gotoPreviousInstruction() {
-        Bundle arguments = new Bundle();
-        arguments.putInt(RecipeInstructionsListActivity.INSTRUCTION_STEP,
-                mInstructionStep - 1);
-        fragmentTransaction(arguments);
+        if (mInstructionStep != 0) {
+            Bundle arguments = new Bundle();
+            arguments.putInt(RecipeInstructionsListActivity.INSTRUCTION_STEP,
+                    mInstructionStep - 1);
+            fragmentTransaction(arguments);
+        }
     }
 
     @BindView(R.id.tv_instruction_next)
@@ -67,10 +69,14 @@ public class RecipeInstructionDetailFragment extends Fragment {
 
     @OnClick(R.id.tv_instruction_next)
     void gotoNextInstruction() {
-        Bundle arguments = new Bundle();
-        arguments.putInt(RecipeInstructionsListActivity.INSTRUCTION_STEP,
-                mInstructionStep + 1);
-        fragmentTransaction(arguments);
+        int totalSteps = ApplicationPreferences.getTotalInstructions(getContext());
+
+        if (totalSteps != mInstructionStep - 1) {
+            Bundle arguments = new Bundle();
+            arguments.putInt(RecipeInstructionsListActivity.INSTRUCTION_STEP,
+                    mInstructionStep + 1);
+            fragmentTransaction(arguments);
+        }
     }
 
     private String mShortDescription, mDescription = "", mVideoUrl;
