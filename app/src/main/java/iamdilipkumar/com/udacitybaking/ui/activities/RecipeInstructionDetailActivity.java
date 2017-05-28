@@ -84,8 +84,8 @@ public class RecipeInstructionDetailActivity extends AppCompatActivity {
 
     private void checkOrientationAndLoad(Bundle arguments, Bundle savedInstanceState) {
 
-        if (getResources().getConfiguration().orientation
-                == Configuration.ORIENTATION_PORTRAIT) {
+        if ((getResources().getConfiguration().orientation
+                == Configuration.ORIENTATION_PORTRAIT) || (mInstructionStep == -1)) {
             Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
             setSupportActionBar(toolbar);
 
@@ -115,8 +115,12 @@ public class RecipeInstructionDetailActivity extends AppCompatActivity {
         } else {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-            Step step = getInstruction(this,mInstructionStep);
-            if(step!=null){
+            SimpleExoPlayerView simpleExoPlayer =
+                    ButterKnife.findById(this, R.id.instruction_player);
+            simpleExoPlayer.setVisibility(View.VISIBLE);
+
+            Step step = getInstruction(this, mInstructionStep);
+            if (step != null) {
                 loadMediaPlayer(step.getVideoURL());
             }
         }
