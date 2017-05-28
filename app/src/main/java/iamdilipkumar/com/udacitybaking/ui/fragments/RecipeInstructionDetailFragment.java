@@ -25,6 +25,7 @@ import com.google.android.exoplayer2.util.Util;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import iamdilipkumar.com.udacitybaking.R;
 import iamdilipkumar.com.udacitybaking.data.ApplicationPreferences;
 import iamdilipkumar.com.udacitybaking.data.BakingProvider;
@@ -53,14 +54,31 @@ public class RecipeInstructionDetailFragment extends Fragment {
     @BindView(R.id.tv_instruction_previous)
     TextView previousInstruction;
 
+    @OnClick(R.id.tv_instruction_previous)
+    void gotoPreviousInstruction() {
+        Bundle arguments = new Bundle();
+        arguments.putInt(RecipeInstructionsListActivity.INSTRUCTION_STEP,
+                mInstructionStep - 1);
+        fragmentTransaction(arguments);
+    }
+
     @BindView(R.id.tv_instruction_next)
     TextView nextInstruction;
+
+    @OnClick(R.id.tv_instruction_next)
+    void gotoNextInstruction() {
+        Bundle arguments = new Bundle();
+        arguments.putInt(RecipeInstructionsListActivity.INSTRUCTION_STEP,
+                mInstructionStep + 1);
+        fragmentTransaction(arguments);
+    }
 
     private String mShortDescription, mDescription = "", mVideoUrl;
     private int mInstructionStep;
     SimpleExoPlayer mExoPlayer;
 
     public RecipeInstructionDetailFragment() {
+
     }
 
     @Override
@@ -172,6 +190,15 @@ public class RecipeInstructionDetailFragment extends Fragment {
         } else {
             simpleExoPlayer.setVisibility(View.GONE);
         }
+    }
+
+    private void fragmentTransaction(Bundle arguments) {
+        RecipeInstructionDetailFragment fragment = new RecipeInstructionDetailFragment();
+        fragment.setArguments(arguments);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.recipeitem_detail_container, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override

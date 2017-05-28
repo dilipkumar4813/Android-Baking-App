@@ -30,7 +30,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/normal_margin">
+        android:layout_margin="@dimen/normal_margin"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/tv_instruction_previous"
