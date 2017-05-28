@@ -1,10 +1,8 @@
 package iamdilipkumar.com.udacitybaking.ui.fragments;
 
-import android.app.Activity;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,7 +29,7 @@ import iamdilipkumar.com.udacitybaking.R;
 import iamdilipkumar.com.udacitybaking.data.ApplicationPreferences;
 import iamdilipkumar.com.udacitybaking.data.BakingProvider;
 import iamdilipkumar.com.udacitybaking.data.IngredientsColumns;
-import iamdilipkumar.com.udacitybaking.data.StepsColumns;
+import iamdilipkumar.com.udacitybaking.models.Step;
 import iamdilipkumar.com.udacitybaking.ui.activities.RecipeInstructionDetailActivity;
 import iamdilipkumar.com.udacitybaking.ui.activities.RecipeInstructionsListActivity;
 
@@ -76,19 +74,15 @@ public class RecipeInstructionDetailFragment extends Fragment {
                     getArguments().getInt(RecipeInstructionsListActivity.INSTRUCTION_STEP) - 1;
 
             if (mInstructionStep >= 0) {
-                getInstructionStep(recipeId);
+                Step step
+                        = RecipeInstructionDetailActivity.getInstruction(
+                        getActivity(), mInstructionStep);
+                mShortDescription = step.getShortDescription();
+                mDescription = step.getDescription();
+                mVideoUrl = step.getVideoURL();
             } else {
                 getIngredients(recipeId);
             }
-        }
-
-        String name = ApplicationPreferences.getRecipeName(getContext());
-
-        Activity activity = this.getActivity();
-        CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout)
-                activity.findViewById(R.id.toolbar_layout);
-        if (appBarLayout != null) {
-            appBarLayout.setTitle(name);
         }
     }
 
@@ -118,31 +112,6 @@ public class RecipeInstructionDetailFragment extends Fragment {
         }
 
         return rootView;
-    }
-
-    private void getInstructionStep(int recipeId) {
-        Cursor cursor = getActivity().getContentResolver()
-                .query(BakingProvider.StepsTable.CONTENT_URI
-                        , null
-                        , StepsColumns.RECIPE_ID + "=" + recipeId
-                                + " AND " + StepsColumns.STEPS + "=" + mInstructionStep
-                        , null
-                        , null);
-
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                mShortDescription = cursor.getString(
-                        cursor.getColumnIndex(StepsColumns.SHORT_DESCRIPTION));
-                mDescription = cursor.getString(
-                        cursor.getColumnIndex(StepsColumns.LONG_DESCRIPTION));
-                mVideoUrl = cursor.getString(
-                        cursor.getColumnIndex(StepsColumns.VIDEO_URL));
-            }
-        }
-
-        if (cursor != null) {
-            cursor.close();
-        }
     }
 
     private void getIngredients(int recipeId) {
@@ -189,9 +158,6 @@ public class RecipeInstructionDetailFragment extends Fragment {
 
         String userAgent = Util.getUserAgent(getContext(), getActivity().getString(R.string.app_name));
 
-        //mVideoUrl = "http://www.sample-videos.com/video/mp4/480/big_buck_bunny_480p_5mb.mp4";
-        //https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffdc33_-intro-brownies/-intro-brownies.mp4
-
         if (mVideoUrl != null) {
             if (!mVideoUrl.isEmpty()) {
                 Log.d("url", mVideoUrl);
@@ -209,9 +175,11 @@ public class RecipeInstructionDetailFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mExoPlayer.release();
-        mExoPlayer = null;
+    public void onStop() {
+        super.onStop();
+        if (mExoPlayer != null) {
+            mExoPlayer.release();
+            mExoPlayer = null;
+        }
     }
 }
