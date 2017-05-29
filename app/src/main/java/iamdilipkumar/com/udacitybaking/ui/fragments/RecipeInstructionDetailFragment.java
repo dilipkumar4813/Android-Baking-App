@@ -56,12 +56,10 @@ public class RecipeInstructionDetailFragment extends Fragment {
 
     @OnClick(R.id.tv_instruction_previous)
     void gotoPreviousInstruction() {
-        if (mInstructionStep != 0) {
-            Bundle arguments = new Bundle();
-            arguments.putInt(RecipeInstructionsListActivity.INSTRUCTION_STEP,
-                    mInstructionStep - 1);
-            fragmentTransaction(arguments);
-        }
+        Bundle arguments = new Bundle();
+        arguments.putInt(RecipeInstructionsListActivity.INSTRUCTION_STEP,
+                mInstructionStep);
+        fragmentTransaction(arguments);
     }
 
     @BindView(R.id.tv_instruction_next)
@@ -69,14 +67,10 @@ public class RecipeInstructionDetailFragment extends Fragment {
 
     @OnClick(R.id.tv_instruction_next)
     void gotoNextInstruction() {
-        int totalSteps = ApplicationPreferences.getTotalInstructions(getContext());
-
-        if (totalSteps != mInstructionStep - 1) {
-            Bundle arguments = new Bundle();
-            arguments.putInt(RecipeInstructionsListActivity.INSTRUCTION_STEP,
-                    mInstructionStep + 1);
-            fragmentTransaction(arguments);
-        }
+        Bundle arguments = new Bundle();
+        arguments.putInt(RecipeInstructionsListActivity.INSTRUCTION_STEP,
+                mInstructionStep + 2);
+        fragmentTransaction(arguments);
     }
 
     private String mShortDescription, mDescription = "", mVideoUrl;
@@ -138,6 +132,11 @@ public class RecipeInstructionDetailFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * Method to fetch all the ingredients for the recipe using the content provider
+     *
+     * @param recipeId - Used to query the ingredients
+     */
     private void getIngredients(int recipeId) {
         Cursor cursor = getActivity().getContentResolver()
                 .query(BakingProvider.IngredientsTable.CONTENT_URI
@@ -172,6 +171,9 @@ public class RecipeInstructionDetailFragment extends Fragment {
         mShortDescription = getActivity().getString(R.string.ingredients);
     }
 
+    /**
+     * Method to load the media player for playback
+     */
     private void loadMediaPlayer() {
         TrackSelector trackSelector = new DefaultTrackSelector();
 
@@ -198,14 +200,31 @@ public class RecipeInstructionDetailFragment extends Fragment {
         }
     }
 
+    /**
+     * Method to change the fragment based on the bottom navigation used only for
+     * Phone screens
+     *
+     * @param arguments - Contains the key to instruct the next step
+     */
     private void fragmentTransaction(Bundle arguments) {
         RecipeInstructionDetailFragment fragment = new RecipeInstructionDetailFragment();
         fragment.setArguments(arguments);
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.recipeitem_detail_container, fragment)
+                .detach(fragment)
+                .attach(fragment)
                 .addToBackStack(null)
                 .commit();
     }
+
+    /*@Override
+    public void onDetach() {
+        super.onDetach();
+        if (mExoPlayer != null) {
+            mExoPlayer.release();
+            mExoPlayer = null;
+        }
+    }*/
 
     @Override
     public void onStop() {
