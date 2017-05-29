@@ -25,6 +25,8 @@ import iamdilipkumar.com.udacitybaking.models.Recipe;
  *
  * @author dilipkumar4813
  * @version 1.0
+ *
+ * Class to display the items in a gridview by extending the BaseAdapter
  */
 
 public class RecipesAdapter extends BaseAdapter {

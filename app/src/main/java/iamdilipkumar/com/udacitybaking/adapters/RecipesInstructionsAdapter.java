@@ -25,6 +25,9 @@ public class RecipesInstructionsAdapter extends RecyclerView.Adapter<RecipesInst
     private OnInstructionsClick mOnInstructionsClick;
     private ArrayList<Step> mSteps = new ArrayList<>();
 
+    /**
+     * Interface to implement onClick on the activity housing the recyclerview
+     */
     public interface OnInstructionsClick {
         void instructionClick(int position);
     }
@@ -52,6 +55,9 @@ public class RecipesInstructionsAdapter extends RecyclerView.Adapter<RecipesInst
         return mSteps.size();
     }
 
+    /**
+     * Class to create view holder for the instruction/ingredient item
+     */
     class InstructionsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.id)
         TextView mIdView;
