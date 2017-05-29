@@ -40,6 +40,20 @@ Important : You are required to have Java 8 installed to use this project
 #### Widget
 ![Widget](https://github.com/dilipkumar4813/Android-Baking-App/blob/master/screenshots/phone/potrait/device-2017-05-29-151735.png)
 
+### Phone Landscape
+
+#### Recipes List
+![Recipes List](https://github.com/dilipkumar4813/Android-Baking-App/blob/master/screenshots/phone/landscape/device-2017-05-29-152252.png)
+
+#### Recipe Instructions and Ingredients
+![Recipes steps](https://github.com/dilipkumar4813/Android-Baking-App/blob/master/screenshots/phone/landscape/device-2017-05-29-152301.png)
+
+#### Ingredients Detail
+![Ingredients Detail](https://github.com/dilipkumar4813/Android-Baking-App/blob/master/screenshots/phone/landscape/device-2017-05-29-152321.png)
+
+#### Instruction Detail
+![Instruction Detail](https://github.com/dilipkumar4813/Android-Baking-App/blob/master/screenshots/phone/landscape/device-2017-05-29-152521.png)
+
 ## Libraries
 
 * [Glide](https://github.com/bumptech/glide)
