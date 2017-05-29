@@ -15,9 +15,9 @@ An Android application that will list recipes and show instructions based on how
 
 ## How to use the source code
 
-1. Download or clone the repository on the your local machine.
-2. Open the project using android studio
-3. Allow it to complete its magic(Ensure you allow the IDE to configure gradle) and your done
+1. Download or clone the repository onto your local machine.
+2. Open the project using Android Studio
+3. Allow it to complete its magic(Ensure you allow the IDE to configure Gradle) and your done
 
 Important : You are required to have Java 8 installed to use this project
 
