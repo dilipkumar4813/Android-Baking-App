@@ -217,15 +217,6 @@ public class RecipeInstructionDetailFragment extends Fragment {
                 .commit();
     }
 
-    /*@Override
-    public void onDetach() {
-        super.onDetach();
-        if (mExoPlayer != null) {
-            mExoPlayer.release();
-            mExoPlayer = null;
-        }
-    }*/
-
     @Override
     public void onStop() {
         super.onStop();
