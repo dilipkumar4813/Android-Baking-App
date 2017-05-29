@@ -19,7 +19,26 @@ An Android application that will list recipes and show instructions based on how
 2. Open the project using android studio
 3. Allow it to complete its magic(Ensure you allow the IDE to configure gradle) and your done
 
-Important : You are required to have Java 8 for this project
+Important : You are required to have Java 8 installed to use this project
+
+## Screenshots
+
+### Phone portrait
+
+#### Recipes List
+![Recipes List](https://github.com/dilipkumar4813/Android-Baking-App/blob/master/screenshots/phone/potrait/device-2017-05-29-151816.png)
+
+#### Recipe Instructions and Ingredients
+![Recipes steps](https://github.com/dilipkumar4813/Android-Baking-App/blob/master/screenshots/phone/potrait/device-2017-05-29-151836.png)
+
+#### Ingredients Detail
+![Ingredients Detail](https://github.com/dilipkumar4813/Android-Baking-App/blob/master/screenshots/phone/potrait/device-2017-05-29-151856.png)
+
+#### Instruction Detail
+![Instruction Detail](https://github.com/dilipkumar4813/Android-Baking-App/blob/master/screenshots/phone/potrait/device-2017-05-29-151935.png)
+
+#### Widget
+![Widget](https://github.com/dilipkumar4813/Android-Baking-App/blob/master/screenshots/phone/potrait/device-2017-05-29-151735.png)
 
 ## Libraries
 
