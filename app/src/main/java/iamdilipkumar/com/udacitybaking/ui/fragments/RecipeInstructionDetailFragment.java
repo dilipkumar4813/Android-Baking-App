@@ -75,7 +75,7 @@ public class RecipeInstructionDetailFragment extends Fragment {
 
     private String mShortDescription, mDescription = "", mVideoUrl;
     private int mInstructionStep;
-    SimpleExoPlayer mExoPlayer;
+    private SimpleExoPlayer mExoPlayer;
 
     public RecipeInstructionDetailFragment() {
 

@@ -64,37 +64,7 @@ public class RecipeInstructionsListActivity extends AppCompatActivity implements
             mRecipeId = ApplicationPreferences.getRecipeId(this);
             toolbar.setTitle(mRecipeName);
 
-            Cursor cursor = getContentResolver().query(BakingProvider.StepsTable.CONTENT_URI,
-                    null, StepsColumns.RECIPE_ID + "=" + mRecipeId, null, null);
-
-            if (cursor != null) {
-                if (cursor.moveToFirst()) {
-                    do {
-                        String shortDescription = cursor.getString(cursor.getColumnIndex(StepsColumns.SHORT_DESCRIPTION));
-                        String step = cursor.getString(cursor.getColumnIndex(StepsColumns.STEPS));
-
-                        Step instruction = new Step();
-                        instruction.setShortDescription(shortDescription);
-                        instruction.setId(Integer.parseInt(step));
-
-                        mSteps.add(instruction);
-
-                    } while (cursor.moveToNext());
-                }
-            }
-
-            if (cursor != null) {
-                cursor.close();
-            }
-
-            ApplicationPreferences.setTotalInstructions(this, mSteps.size());
-
-            Step instruction = new Step();
-            instruction.setShortDescription(getString(R.string.ingredients));
-            instruction.setId(-1);
-            mSteps.add(instruction);
-
-            Collections.reverse(mSteps);
+            loadSteps();
         } else {
             mRecipeName = savedInstanceState.getString(RecipesActivity.RECIPE_NAME);
             mRecipeId = savedInstanceState.getInt(RecipesActivity.RECIPE_ID);
@@ -105,10 +75,6 @@ public class RecipeInstructionsListActivity extends AppCompatActivity implements
         assert instructionsItems != null;
         mAdapter = new RecipesInstructionsAdapter(mSteps, this);
         instructionsItems.setAdapter(mAdapter);
-
-        /*if(savedInstanceState!=null){
-            instructionsItems.smoothScrollToPosition();
-        }*/
 
         if (findViewById(R.id.recipeitem_detail_container) != null) {
             mTwoPane = true;
@@ -150,5 +116,39 @@ public class RecipeInstructionsListActivity extends AppCompatActivity implements
             intent.putExtra(INSTRUCTION_STEP, position);
             startActivity(intent);
         }
+    }
+
+    private void loadSteps() {
+        Cursor cursor = getContentResolver().query(BakingProvider.StepsTable.CONTENT_URI,
+                null, StepsColumns.RECIPE_ID + "=" + mRecipeId, null, null);
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
+                    String shortDescription = cursor.getString(cursor.getColumnIndex(StepsColumns.SHORT_DESCRIPTION));
+                    String step = cursor.getString(cursor.getColumnIndex(StepsColumns.STEPS));
+
+                    Step instruction = new Step();
+                    instruction.setShortDescription(shortDescription);
+                    instruction.setId(Integer.parseInt(step));
+
+                    mSteps.add(instruction);
+
+                } while (cursor.moveToNext());
+            }
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        ApplicationPreferences.setTotalInstructions(this, mSteps.size());
+
+        Step instruction = new Step();
+        instruction.setShortDescription(getString(R.string.ingredients));
+        instruction.setId(-1);
+        mSteps.add(instruction);
+
+        Collections.reverse(mSteps);
     }
 }
