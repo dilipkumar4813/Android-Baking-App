@@ -54,6 +54,31 @@ Important : You are required to have Java 8 installed to use this project
 #### Instruction Detail
 ![Instruction Detail](https://github.com/dilipkumar4813/Android-Baking-App/blob/master/screenshots/phone/landscape/device-2017-05-29-152521.png)
 
+### Tablet Potrait
+
+#### Recipes List
+![Recipes List](https://github.com/dilipkumar4813/Android-Baking-App/blob/master/screenshots/tablet/potrait/Screenshot_2017-05-28-20-04-23.png)
+
+#### Recipes Instructions and Ingredients
+![Recipe instructions](https://github.com/dilipkumar4813/Android-Baking-App/blob/master/screenshots/tablet/potrait/Screenshot_2017-05-29-20-10-20.png)
+
+#### Instruction Detail
+![Instruction detail](https://github.com/dilipkumar4813/Android-Baking-App/blob/master/screenshots/tablet/potrait/Screenshot_2017-05-28-20-26-39.png)
+
+#### Tablet Widget
+![Widget](https://github.com/dilipkumar4813/Android-Baking-App/blob/master/screenshots/tablet/potrait/Screenshot_2017-05-29-20-04-56.png)
+
+### Tablet Landscape
+
+#### Recipes List
+![Recipes List](https://github.com/dilipkumar4813/Android-Baking-App/blob/master/screenshots/tablet/landscape/Screenshot_2017-05-28-20-07-43.png)
+
+#### Ingredients Detail
+![Ingredients Details](https://github.com/dilipkumar4813/Android-Baking-App/blob/master/screenshots/tablet/landscape/Screenshot_2017-05-28-20-07-25.png)
+
+#### Instruction Detail
+![Instruction detail](https://github.com/dilipkumar4813/Android-Baking-App/blob/master/screenshots/tablet/landscape/Screenshot_2017-05-29-20-09-21.png)
+
 ## Libraries
 
 * [Glide](https://github.com/bumptech/glide)
